@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import './style.css';
+import TodoList from './TodoList';
+import Form from './Form';
+import Footer from './Footer';
+import { Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <Routes>
+        <Route path='/' element={<Home />} />
+      </Routes>
     </div>
   );
 }
+const Home = () => {
+  const [todos, setTodos] = useState([]);
+  const handleCheckTodo = (todo) => {
+    const a = todos.map((item) =>
+      item.id === todo.id ? { ...item, isActive: !item.isActive } : item,
+    );
 
-export default App;
+    setTodos(a);
+  };
+  const addTodo = (todo) => {
+    const newTodo = {
+      id: Math.floor(Math.random() * 16777215).toString(16),
+      isActive: false,
+      title: todo,
+    };
+    setTodos([...todos, newTodo]);
+  };
+
+  return (
+    <div className='App'>
+      <div className='container'>
+        <TodoList todos={todos} handleCheckTodo={handleCheckTodo} />
+        <Form addTodo={addTodo} />
+      </div>
+      <Footer />
+    </div>
+  );
+};
